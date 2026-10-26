@@ -1,0 +1,15 @@
+.field{
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin-left: 40px;
+}
+
+.label{
+ text-align: left;
+ margin-bottom: 10px;
+}
+.delete{
+    margin-left: 40px;
+    margin-top: 10px;
+}

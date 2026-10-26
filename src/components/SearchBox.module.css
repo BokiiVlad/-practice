@@ -1,0 +1,8 @@
+.find{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin-left: 40px;
+    margin-top: 30px;
+}
