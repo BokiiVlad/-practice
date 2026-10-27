@@ -1,36 +1,40 @@
+import { Field, Formik, Form } from "formik";
 import css from "./ContactForm.module.css";
 import { useId } from "react";
 
 function ContactForm({ addContact }) {
-
+  const idNumber = useId();
   const idContact = useId();
+  const idName = useId();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    
+  const handleSubmit = (values, action) => {
     addContact({
       id:idContact,
-      name: form.elements.name.value,
-      number: form.elements.number.value,
+      name: values.name,
+      number: values.number,
     });
-    form.reset()
+    action.resetForm()
   };
 
+ const initialValues = {
+  name: "",
+  number: "",
+}
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Form >
         <div className={css.field}>
-          <label className={css.label} htmlFor="name">
+          <label className={css.label} htmlFor={idName}>
             Name
           </label>
-          <input type="text" name="name" id="name" />
-          <label htmlFor="number">Namber</label>
-          <input type="namber" name="number" id="number" />
+          <Field  name="name" id={idName} />
+          <label htmlFor={idNumber}>Namber</label>
+          <Field type="tel" name="number" id={idNumber} />
         </div>
         <button className={css.delete} type="submit">Add contact</button>
-      </form>
-    </>
+      </Form>
+    </Formik>
   );
 }
 export default ContactForm;
