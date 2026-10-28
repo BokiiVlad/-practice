@@ -1,0 +1,2 @@
+function (){}
+export default ImageCard;
