@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./SearchBar";
 import ImageGallery from "./ImageGallery";
+import LoadMoreBtn from "./LoadMoreBtn";
+import ErrorMessage from "./ErrorMessage";
+import Loader from "./Loader";
 import axios from "axios";
 
 function App() {
@@ -10,9 +13,16 @@ function App() {
   const [loader, setLoader] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [gallery, setGallery] = useState([]);
+  const [page, setPage] = useState(1);
 
   const getQuery = (query) => {
     setQuery(query);
+    setPage(1);
+    setGallery([]);
+  };
+
+  const addPage = () => {
+    setPage((pageNow) => pageNow + 1);
   };
 
   useEffect(() => {
@@ -27,12 +37,13 @@ function App() {
             {
               params: {
                 query: query,
-                per_page:1,
+                page: page,
+                per_page: 2,
                 client_id: import.meta.env.VITE_API_KEY,
               },
             },
           );
-          setGallery(response.data.results);
+          setGallery((prevGall)=>[...prevGall,...response.data.results]);
         }
       } catch (error) {
         setErorr(true);
@@ -41,7 +52,7 @@ function App() {
       }
     };
     getPictures();
-  }, [query]);
+  }, [query, page]);
 
   useEffect(() => {
     console.log(gallery);
@@ -49,12 +60,13 @@ function App() {
 
   return (
     <section>
-      {/* <LoadMoreButton/> */}
       <SearchBar onSubmit={getQuery} />
-     {gallery.length > 0 ? <ImageGallery gallery={gallery}/> : <p>
-     No images found</p>}
-      {/* <Loader/> */}
-      {/* <ErrorMessage/> */}
+      {erorr && <ErrorMessage />}
+      {gallery.length > 0 && <ImageGallery gallery={gallery} />}
+      {loader && <Loader />}
+      {gallery.length > 0 && !loader && (
+        <LoadMoreBtn onClick={addPage} />
+      )}
       {/* <ImageModal/> */}
     </section>
   );
