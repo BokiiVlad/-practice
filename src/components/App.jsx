@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./SearchBar";
+import ImageGallery from "./ImageGallery";
 import axios from "axios";
 
 function App() {
@@ -8,38 +9,50 @@ function App() {
   const [erorr, setErorr] = useState(false);
   const [loader, setLoader] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [gallery,setGallery] = useState([]);
-
- 
+  const [gallery, setGallery] = useState([]);
 
   const getQuery = (query) => {
     setQuery(query);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const getPictures = async () => {
-
       try {
         setLoader(true);
         setErorr(false);
-        const response = await axios.get("https://api.unsplash.com/photos/?client_id={}");
-        setGallery(response.data);
+
+        if (query.trim()) {
+          const response = await axios.get(
+            `https://api.unsplash.com/search/photos`,
+            {
+              params: {
+                query: query,
+                per_page:1,
+                client_id: import.meta.env.VITE_API_KEY,
+              },
+            },
+          );
+          setGallery(response.data.results);
+        }
       } catch (error) {
         setErorr(true);
-      } finally{
+      } finally {
         setLoader(false);
       }
-      } 
-      getPictures();
-  },[])
+    };
+    getPictures();
+  }, [query]);
 
- 
+  useEffect(() => {
+    console.log(gallery);
+  }, [gallery]);
 
   return (
     <section>
       {/* <LoadMoreButton/> */}
       <SearchBar onSubmit={getQuery} />
-      <ImageGallery />
+     {gallery.length > 0 ? <ImageGallery gallery={gallery}/> : <p>
+     No images found</p>}
       {/* <Loader/> */}
       {/* <ErrorMessage/> */}
       {/* <ImageModal/> */}
