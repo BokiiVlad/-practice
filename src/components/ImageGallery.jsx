@@ -1,12 +1,12 @@
 import ImageCard from "./ImageCard";
 
-function ImageGallery({ gallery }) {
+function ImageGallery({ gallery,getSrc,swapModal }) {
   return (
     <ul>
       {gallery.map((el) => {
         return (
           <li key={el.id}>
-              <ImageCard card={el} />
+              <ImageCard card={el} onClick={()=>{getSrc(el);swapModal()}}/>
           </li>
         );
       })}

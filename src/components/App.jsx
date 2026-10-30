@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import ImageGallery from "./ImageGallery";
 import LoadMoreBtn from "./LoadMoreBtn";
 import ErrorMessage from "./ErrorMessage";
+import ImageModal from "./ImageModal";
 import Loader from "./Loader";
 import axios from "axios";
 
@@ -12,6 +13,7 @@ function App() {
   const [erorr, setErorr] = useState(false);
   const [loader, setLoader] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [src, setSrc] = useState({});
   const [gallery, setGallery] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -23,6 +25,15 @@ function App() {
 
   const addPage = () => {
     setPage((pageNow) => pageNow + 1);
+  };
+
+
+  const swapModal = ()=>{
+    setOpenModal((nawState)=>!nawState)
+  }
+
+  const getSrc = (objectSrc) => {
+    setSrc(objectSrc);
   };
 
   useEffect(() => {
@@ -62,12 +73,12 @@ function App() {
     <section>
       <SearchBar onSubmit={getQuery} />
       {erorr && <ErrorMessage />}
-      {gallery.length > 0 && <ImageGallery gallery={gallery} />}
+      {gallery.length > 0 && <ImageGallery gallery={gallery}  getSrc={getSrc} swapModal={swapModal}/>}
       {loader && <Loader />}
       {gallery.length > 0 && !loader && (
         <LoadMoreBtn onClick={addPage} />
       )}
-      {/* <ImageModal/> */}
+      {openModal && <ImageModal swapModal={swapModal} srcObj={src} openModal={openModal}/>}
     </section>
   );
 }

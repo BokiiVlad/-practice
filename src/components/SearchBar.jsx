@@ -3,12 +3,14 @@ import toast, { Toaster } from "react-hot-toast";
 function SearchBar({ onSubmit }) {
  
   const handleSubmit = (e) => {
-    const form = e.target;
-    if (!form.elements.query.value.trim()) {
-      toast.error("This didn't work.");
-    }
     e.preventDefault();
-    onSubmit(form.elements.query.value);
+    const form = e.target;
+    const value = form.elements.query.value.trim();
+    if (!value) {
+      toast.error("This didn't work.");
+      return;
+    }
+    onSubmit(value);
     form.reset();
   };
 
